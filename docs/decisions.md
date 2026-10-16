@@ -1,0 +1,19 @@
+# Decisions log
+
+| Date | Decision | Why |
+|---|---|---|
+| 2026-09-29 | Build an MVP and use it as the validation tool (10 to 20 testers). | The owner wants to move straight to a usable product; the test itself answers "will people use it". |
+| 2026-09-29 | Focus: archive of prophetic words spoken over the user (not general notes). | Clearest positioning; general AI notes is crowded (Reflect, Mem, Atlas, Fabric). |
+| 2026-09-29 | Privacy model: standard cloud (not end-to-end encrypted). | The owner's choice: fastest to build; users can reset access; best transcription quality. Consequence: UK GDPR special-category duties (explicit consent, DPIA, UK/EU region, no content in logs, export/delete). |
+| 2026-09-29 | UI in English only for v1. Content in any language is supported. | Fastest to build; Chinese UI later if testers need it. |
+| 2026-09-29 | Build a demo mode first (browser-only storage, rule-based suggestions, pasted transcripts). | The owner wants to test now; cloud and AI need accounts and keys only the owner can create. Same screens work in cloud mode later. |
+| 2026-09-29 | Pin `std-env` to 4.2.0 via npm `overrides`. | vitest 5 needs std-env ^4.2.0; the 4.3.0 package file is not downloadable from the registry (404), which broke `npm install`. Remove the override once 4.3.x installs cleanly. |
+| 2026-09-29 | ESLint 9 (not 10). | Tried 10: `eslint-plugin-react` inside `eslint-config-next` 16.3 crashes on it (`context.getFilename` was removed). npm marks 9 as no longer supported; move to 10 once the plugin supports it. |
+| 2026-09-29 | TypeScript 5.9 (not 7.0). | 7.0 is the new native rewrite; Next.js compatibility not yet verified. |
+| 2026-09-29 | Public test link on Vercel for testers. | The owner couldn't open localhost. Vercel made it production automatically (first deploy of a new project); kept, because demo mode stores nothing on the server and the page is noindex. Verified live: welcome, add word, suggestions, timeline, 3D view, delete everything; only GET requests, no console errors. |
+| 2026-10-08 | Transcription through OpenRouter (the owner's choice), model `mistralai/voxtral-mini-transcribe`, always with `zdr: true` + `data_collection: "deny"`. | The owner wants one key for all AI, with models swappable by a setting. Claude had recommended AssemblyAI EU, because its retention and training switches are self-serve. Accepted trade-off: OpenRouter is a US intermediary, and EU-only routing needs its Business plan; recorded for the DPIA. Fail-closed privacy routing keeps the "keeps nothing, no training" promise true. |
+| 2026-10-08 | Split long recordings in the browser (16 kHz mono WAV, cut at the quietest moment, under 3.8 MB per piece). | Vercel rejects request bodies over 4.5 MB, and there is no cloud storage in demo mode. Splitting at pauses avoids cutting words; 16 kHz WAV is accepted by every provider. |
+| 2026-10-08 | Tester code + OpenRouter key credit limit guard the Transcribe button. | The site is public; without a guard anyone could spend the owner's credit. The key's credit limit is the hard cap and needs no code. |
+| 2026-10-16 | Open source on GitHub, MIT licence, code only. | The owner wants others to benefit and build on it. Words never live in the repo (demo mode keeps them in each user's browser), so publishing the code exposes nothing personal. |
+| 2026-10-16 | Public name is "Word Archive" (repo `word-archive`, spec `docs/SPEC.md`); the README shows screenshots with fictional words and never the owner's deployment address. | The owner's request: no "MVP" in the public name, and the live test link not on show. Screenshots explain what the app is for without it. |
+| 2026-09-29 | AI records, classifies and tags; never interprets. | Carried over from Prophetic Words; also the main difference from competitors selling "AI insights". |
