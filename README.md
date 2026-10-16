@@ -2,6 +2,8 @@
 
 Keep the prophetic words spoken over you, exactly as given, and see them together on a timeline and a map of shared themes.
 
+**Free and open source** under the [MIT licence](LICENSE). Anyone may use it, run their own copy, change it and share it, at no cost. It works fully without any paid service; only the optional transcription uses credit on your own OpenRouter account.
+
 ![The themes map: each word is a coloured point on a line through time, linked to the themes it shares with other words](docs/screenshots/themes-map.png)
 
 ## What it is for
@@ -30,6 +32,10 @@ Word Archive keeps them in one place:
 <img src="docs/screenshots/add.png" width="560" alt="Adding a word: the text box, who spoke it and when, and suggested themes and scripture to tap">
 
 **Adding a word.** Choose a recording, photos or text. Themes and scripture references are suggested from the text, each with the words that triggered it. Tap the ones that fit.
+
+<img src="docs/screenshots/phone.png" width="300" alt="The home page on a phone: the title and counts, the themes map, the theme filters and the buttons My data, Import and Add a word along the bottom">
+
+**On a phone.** The same archive works in a phone browser, with the main buttons along the bottom.
 
 All screenshots use fictional sample words.
 
@@ -90,6 +96,12 @@ If it says "Transcription is unavailable right now", OpenRouter has no private r
 - `npm run check` runs typecheck, lint, unit tests, the production build and the end-to-end tests (`tests/e2e/`, fictional data only; the transcription test uses a fake OpenRouter server).
 - Optional setting for testing: `OPENROUTER_BASE_URL`.
 
+## Contributing
+
+Suggestions, bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md).
+
 ## Licence
 
-[MIT](LICENSE): anyone can use, copy and change this code. The repository holds code, docs and fictional test data only: no one's words, recordings or keys.
+[MIT](LICENSE). You may use, copy, change, publish, share and even sell this software, for free, as long as the copyright and licence notice stay with it. It comes with no warranty.
+
+The repository holds code, docs and fictional test data only: no one's words, recordings or keys.

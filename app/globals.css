@@ -16,6 +16,10 @@
 .actionbar{position:absolute;top:24px;right:clamp(16px,4vw,48px);z-index:6;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end}
 .demo-pill{font-size:12px;color:var(--muted);border:1px dashed var(--line-2);border-radius:999px;padding:4px 10px}
 .sky-legend{top:84px}
+@media (max-width:1024px){
+  /* here the counts line under the title can run into the top right, so the legend sits above the zoom buttons */
+  .sky-legend{top:auto;bottom:72px}
+}
 @media (max-width:760px){
   .actionbar{position:fixed;top:auto;bottom:0;left:0;right:0;justify-content:stretch;gap:6px;padding:10px 12px calc(10px + env(safe-area-inset-bottom));
     background:rgba(11,15,23,.94);border-top:1px solid var(--line);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}

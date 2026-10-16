@@ -16,7 +16,9 @@ const SHELL = JSON.parse(shellSrc.slice(shellSrc.indexOf('export const SHELL = '
 const app = read('lib/roadmap/app.js')
   .replace("import * as THREE from 'three';", '')
   .replace("import { SHELL } from './shell.js';", '')
+  .replace("import { fitTagCount } from './tags.js';", '')
   .replace('export function mountRoadmap(', 'window.mountRoadmap = function mountRoadmap(');
+const tags = read('lib/roadmap/tags.js').replace('export function fitTagCount(', 'function fitTagCount(');
 const three = fs.readFileSync(root + 'node_modules/three/build/three.min.js', 'utf8');
 const css = read('app/roadmap.css') + read('app/globals.css');
 
@@ -29,6 +31,7 @@ const WORDS = [
   rec('w1', '2023-01-15', '15 January 2023', '15 Jan 2023', 'Sample Speaker A', ['calling', 'peace'], 'First fictional word.', [{ kind: 'audio', url: 'blob:x/1', name: 'a.m4a' }, { kind: 'image', url: 'blob:x/2', name: 'p.png' }]),
   rec('w2', '2024-06-01', '1 June 2024', '1 Jun 2024', 'Sample Speaker B', ['calling'], 'Second fictional word.'),
   rec('w3', '2024-06-04', '4 June 2024', '4 Jun 2024', 'Sample Speaker C', ['provision'], 'Third fictional word.'),
+  rec('w4', '2025-02-10', '10 February 2025', '10 Feb 2025', 'Sample Speaker D', ['serving-others', 'breakthrough', 'mentorship', 'leadership'], 'Fourth fictional word.'),
 ];
 
 const errors = [];
@@ -36,11 +39,14 @@ const dom = new JSDOM(`<!doctype html><html><head><style>${css}</style></head><b
 <script>${three}</script>
 <script>THREE.WebGLRenderer=function(){this.setPixelRatio=function(){};this.setSize=function(){};this.dispose=function(){};this.render=function(s,c){s.updateMatrixWorld();c.updateMatrixWorld();};};</script>
 <script>var SHELL = ${JSON.stringify(SHELL).replace(/<\//g, '<\\/')};</script>
+<script>${tags}</script>
 <script>${app}</script></body></html>`, {
   url: 'http://localhost/', runScripts: 'dangerously', pretendToBeVisual: true,
   beforeParse(w) {
     w.HTMLCanvasElement.prototype.getContext = () => ({ createRadialGradient: () => ({ addColorStop() {} }), createLinearGradient: () => ({ addColorStop() {} }), fillRect() {}, fillStyle: '' });
-    Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return this.id === 'sky' ? 1200 : 900; } });
+    // card tag lines are 212 px wide and each tag is 16 px plus 7 px per character (jsdom has no layout)
+    Object.defineProperty(w.HTMLElement.prototype, 'clientWidth', { get() { return this.id === 'sky' ? 1200 : this.classList.contains('tags') ? 212 : 900; } });
+    Object.defineProperty(w.HTMLElement.prototype, 'offsetWidth', { get() { return this.classList.contains('tag') ? 16 + 7 * this.textContent.length : 0; } });
     Object.defineProperty(w.HTMLElement.prototype, 'clientHeight', { get() { return this.id === 'sky' ? 700 : 500; } });
     w.HTMLCanvasElement.prototype.getBoundingClientRect = () => ({ left: 0, top: 0, width: 1200, height: 700 });
     w.addEventListener('error', (e) => errors.push(e.message));
@@ -57,6 +63,9 @@ const cs = (el) => w.getComputedStyle(el);
 const blockers = [...d.getElementById('sky').children].filter((el) => el.id !== 'sky-canvas' && el.id !== 'sky-ctrl' && cs(el).display !== 'none' && cs(el).pointerEvents !== 'none');
 ok(d.getElementById('sky-fallback').hidden && blockers.length === 0, '3D view started and nothing covers the canvas');
 ok(d.querySelector('.top h1').textContent === 'Word Archive', 'header shows the app name');
+const cardTags = (i) => [...d.querySelectorAll(`.card[data-i="${i}"] .tag`)].map((t) => t.textContent).join(', ');
+ok(cardTags(0) === 'calling, peace', 'a card shows all its themes when they fit on one line');
+ok(cardTags(3) === 'serving-others, +3', 'themes that do not fit on the line are counted in "+N", not cut off: ' + cardTags(3));
 
 const cv = d.getElementById('sky-canvas');
 const labels = [...d.querySelectorAll('.lbl-word')];

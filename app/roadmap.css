@@ -93,6 +93,10 @@ h2{margin:0;font-size:22px;font-weight:600;letter-spacing:-.01em}
 .card-ex{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:6px;font-size:12.5px;line-height:1.45;color:var(--muted)}
 .tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .tag{font-size:11px;padding:2px 8px;border-radius:999px;background:rgba(201,214,238,.08);color:var(--ice)}
+/* a card's themes stay on one line (fitCardTags in app.js drops what doesn't fit into "+N") */
+.card .tags{flex-wrap:nowrap;overflow:hidden}
+.card .tag{flex:none;white-space:nowrap}
+.card .tags.fitted .tag:first-child{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
 .empty{padding:28px;border:1px dashed var(--line-2);border-radius:var(--r);color:var(--muted);font-size:14.5px;margin:0}
 
 .th-row{display:grid;grid-template-columns:minmax(120px,190px) 1fr 40px;align-items:center;gap:16px;padding:8px 0;border-bottom:1px solid var(--line);transition:opacity .25s var(--ease)}
@@ -141,7 +145,7 @@ h2{margin:0;font-size:22px;font-weight:600;letter-spacing:-.01em}
 @media (pointer:coarse){.chip,.btn,.th-name{min-height:44px}}
 @media (max-width:640px){
   .sky{height:64vh;min-height:400px}
-  .sky-legend{display:none}
+  .sky-legend:not([hidden]){display:none} /* as specific as the display:flex rule at the top, so it wins */
   .sky-hint{bottom:70px;max-width:none;right:16px}
   .tl-col,.tl-cards{width:210px}
   .th-row{grid-template-columns:1fr 32px}
